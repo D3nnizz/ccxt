@@ -39,7 +39,7 @@ class bybit(Exchange, ImplicitAPI):
             'version': 'v5',
             'userAgent': None,
             'rateLimit': 20,
-            'hostname': 'bybit.com',  # bybit.com, bytick.com, bybit.nl, bybit.com.hk
+            'hostname': 'bybit.eu',  # bybit.com, bytick.com, bybit.nl, bybit.com.hk
             'pro': True,
             'certified': True,
             'has': {
