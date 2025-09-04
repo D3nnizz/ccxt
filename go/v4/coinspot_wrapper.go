@@ -282,6 +282,7 @@ func (this *Coinspot) CancelOrder(id string, options ...CancelOrderOptions) (Ord
 }
 // missing typed methods from base
 //nolint
+func (this *Coinspot) LoadMarkets(params ...interface{}) (map[string]MarketInterface, error) { return this.exchangeTyped.LoadMarkets(params...) }
 func (this *Coinspot) CancelAllOrders(options ...CancelAllOrdersOptions) ([]Order, error) {return this.exchangeTyped.CancelAllOrders(options...)}
 func (this *Coinspot) CancelAllOrdersAfter(timeout int64, options ...CancelAllOrdersAfterOptions) (map[string]interface{}, error) {return this.exchangeTyped.CancelAllOrdersAfter(timeout, options...)}
 func (this *Coinspot) CancelOrdersForSymbols(orders []CancellationRequest, options ...CancelOrdersForSymbolsOptions) ([]Order, error) {return this.exchangeTyped.CancelOrdersForSymbols(orders, options...)}

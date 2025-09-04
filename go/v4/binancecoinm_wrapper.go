@@ -58,6 +58,7 @@ func (this *Binancecoinm) TransferOut(code string, amount interface{}, options .
 }
 // missing typed methods from base
 //nolint
+func (this *Binancecoinm) LoadMarkets(params ...interface{}) (map[string]MarketInterface, error) { return this.exchangeTyped.LoadMarkets(params...) }
 func (this *Binancecoinm) CancelAllOrders(options ...CancelAllOrdersOptions) ([]Order, error) {return this.exchangeTyped.CancelAllOrders(options...)}
 func (this *Binancecoinm) CancelAllOrdersAfter(timeout int64, options ...CancelAllOrdersAfterOptions) (map[string]interface{}, error) {return this.exchangeTyped.CancelAllOrdersAfter(timeout, options...)}
 func (this *Binancecoinm) CancelOrder(id string, options ...CancelOrderOptions) (Order, error) {return this.exchangeTyped.CancelOrder(id, options...)}

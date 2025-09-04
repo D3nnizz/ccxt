@@ -1160,8 +1160,15 @@ class Exchange {
         }
     }
     async close() {
+        // test by running ts/src/pro/test/base/test.close.ts
+        await this.sleep(0); // allow other futures to run
         const clients = Object.values(this.clients || {});
         const closedClients = [];
+        for (let i = 0; i < clients.length; i++) {
+            const client = clients[i];
+            client.error = new errors.ExchangeClosedByUser(this.id + ' closedByUser');
+            closedClients.push(client.close());
+        }
         for (let i = 0; i < clients.length; i++) {
             const client = clients[i];
             delete this.clients[client.url];
@@ -1193,6 +1200,7 @@ class Exchange {
             }
             client.reject(new errors.ExchangeError(this.id + ' nonce is behind the cache after ' + maxRetries.toString() + ' tries.'), messageHash);
             delete this.clients[client.url];
+            this.orderbooks[symbol] = this.orderBook(); // clear the orderbook and its cache - issue https://github.com/ccxt/ccxt/issues/26753
         }
         catch (e) {
             client.reject(e, messageHash);
@@ -1841,6 +1849,13 @@ class Exchange {
         // return the first index of the cache that can be applied to the orderbook or -1 if not possible
         return -1;
     }
+    arraysConcat(arraysOfArrays) {
+        let result = [];
+        for (let i = 0; i < arraysOfArrays.length; i++) {
+            result = this.arrayConcat(result, arraysOfArrays[i]);
+        }
+        return result;
+    }
     findTimeframe(timeframe, timeframes = undefined) {
         if (timeframes === undefined) {
             timeframes = this.timeframes;
@@ -2196,6 +2211,9 @@ class Exchange {
     }
     async unWatchPositions(symbols = undefined, params = {}) {
         throw new errors.NotSupported(this.id + ' unWatchPositions() is not supported yet');
+    }
+    async unWatchTicker(symbol, params = {}) {
+        throw new errors.NotSupported(this.id + ' unWatchTicker() is not supported yet');
     }
     async fetchDepositAddresses(codes = undefined, params = {}) {
         throw new errors.NotSupported(this.id + ' fetchDepositAddresses() is not supported yet');
@@ -4685,6 +4703,12 @@ class Exchange {
             return market;
         }
         return result;
+    }
+    marketOrNull(symbol) {
+        if (symbol === undefined) {
+            return undefined;
+        }
+        return this.market(symbol);
     }
     checkRequiredCredentials(error = true) {
         /**

@@ -846,6 +846,7 @@ func (this *Hyperliquid) FetchOrders(options ...FetchOrdersOptions) ([]Order, er
  * @param {string} id order id
  * @param {string} symbol unified symbol of the market the order was made in
  * @param {object} [params] extra parameters specific to the exchange API endpoint
+ * @param {string} [params.clientOrderId] client order id, (optional 128 bit hex string e.g. 0x1234567890abcdef1234567890abcdef)
  * @param {string} [params.user] user address, will default to this.walletAddress if not provided
  * @param {string} [params.subAccountAddress] sub account user address
  * @returns {object} An [order structure]{@link https://docs.ccxt.com/#/?id=order-structure}
@@ -1384,6 +1385,7 @@ func (this *Hyperliquid) FetchFundingHistory(options ...FetchFundingHistoryOptio
 }
 // missing typed methods from base
 //nolint
+func (this *Hyperliquid) LoadMarkets(params ...interface{}) (map[string]MarketInterface, error) { return this.exchangeTyped.LoadMarkets(params...) }
 func (this *Hyperliquid) CancelAllOrders(options ...CancelAllOrdersOptions) ([]Order, error) {return this.exchangeTyped.CancelAllOrders(options...)}
 func (this *Hyperliquid) CreateConvertTrade(id string, fromCode string, toCode string, options ...CreateConvertTradeOptions) (Conversion, error) {return this.exchangeTyped.CreateConvertTrade(id, fromCode, toCode, options...)}
 func (this *Hyperliquid) CreateDepositAddress(code string, options ...CreateDepositAddressOptions) (DepositAddress, error) {return this.exchangeTyped.CreateDepositAddress(code, options...)}

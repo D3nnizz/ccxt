@@ -43,7 +43,7 @@ use BN\BN;
 use Sop\ASN1\Type\UnspecifiedType;
 use Exception;
 
-$version = '4.5.0';
+$version = '4.5.3';
 
 // rounding mode
 const TRUNCATE = 0;
@@ -62,7 +62,7 @@ const PAD_WITH_ZERO = 6;
 
 class Exchange {
 
-    const VERSION = '4.5.0';
+    const VERSION = '4.5.3';
 
     private static $base58_alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
     private static $base58_encoder = null;
@@ -391,7 +391,6 @@ class Exchange {
         'deribit',
         'derive',
         'digifinex',
-        'ellipx',
         'exmo',
         'fmfwio',
         'foxbit',
@@ -436,7 +435,6 @@ class Exchange {
         'tokocrypto',
         'tradeogre',
         'upbit',
-        'vertex',
         'wavesexchange',
         'whitebit',
         'woo',
@@ -2843,6 +2841,14 @@ class Exchange {
         return -1;
     }
 
+    public function arrays_concat(array $arraysOfArrays) {
+        $result = array();
+        for ($i = 0; $i < count($arraysOfArrays); $i++) {
+            $result = $this->array_concat($result, $arraysOfArrays[$i]);
+        }
+        return $result;
+    }
+
     public function find_timeframe($timeframe, $timeframes = null) {
         if ($timeframes === null) {
             $timeframes = $this->timeframes;
@@ -3219,6 +3225,10 @@ class Exchange {
 
     public function un_watch_positions(?array $symbols = null, $params = array ()) {
         throw new NotSupported($this->id . ' unWatchPositions() is not supported yet');
+    }
+
+    public function un_watch_ticker(string $symbol, $params = array ()) {
+        throw new NotSupported($this->id . ' unWatchTicker() is not supported yet');
     }
 
     public function fetch_deposit_addresses(?array $codes = null, $params = array ()) {
@@ -4797,7 +4807,7 @@ class Exchange {
         throw new NotSupported($this->id . ' repayMargin is deprecated, please use repayCrossMargin or repayIsolatedMargin instead');
     }
 
-    public function fetch_ohlcv(string $symbol, $timeframe = '1m', ?int $since = null, ?int $limit = null, $params = array ()) {
+    public function fetch_ohlcv(string $symbol, string $timeframe = '1m', ?int $since = null, ?int $limit = null, $params = array ()) {
         $message = '';
         if ($this->has['fetchTrades']) {
             $message = '. If you want to build OHLCV candles from trade executions data, visit https://github.com/ccxt/ccxt/tree/master/examples/ and see "build-ohlcv-bars" file';
@@ -4805,7 +4815,7 @@ class Exchange {
         throw new NotSupported($this->id . ' fetchOHLCV() is not supported yet' . $message);
     }
 
-    public function fetch_ohlcv_ws(string $symbol, $timeframe = '1m', ?int $since = null, ?int $limit = null, $params = array ()) {
+    public function fetch_ohlcv_ws(string $symbol, string $timeframe = '1m', ?int $since = null, ?int $limit = null, $params = array ()) {
         $message = '';
         if ($this->has['fetchTradesWs']) {
             $message = '. If you want to build OHLCV candles from trade executions data, visit https://github.com/ccxt/ccxt/tree/master/examples/ and see "build-ohlcv-bars" file';
@@ -4813,7 +4823,7 @@ class Exchange {
         throw new NotSupported($this->id . ' fetchOHLCVWs() is not supported yet. Try using fetchOHLCV instead.' . $message);
     }
 
-    public function watch_ohlcv(string $symbol, $timeframe = '1m', ?int $since = null, ?int $limit = null, $params = array ()) {
+    public function watch_ohlcv(string $symbol, string $timeframe = '1m', ?int $since = null, ?int $limit = null, $params = array ()) {
         throw new NotSupported($this->id . ' watchOHLCV() is not supported yet');
     }
 
@@ -5814,6 +5824,13 @@ class Exchange {
             return $market;
         }
         return $result;
+    }
+
+    public function market_or_null(string $symbol) {
+        if ($symbol === null) {
+            return null;
+        }
+        return $this->market($symbol);
     }
 
     public function check_required_credentials($error = true) {
@@ -7604,7 +7621,7 @@ class Exchange {
         }
     }
 
-    public function fetch_mark_ohlcv(string $symbol, $timeframe = '1m', ?int $since = null, ?int $limit = null, $params = array ()) {
+    public function fetch_mark_ohlcv(string $symbol, string $timeframe = '1m', ?int $since = null, ?int $limit = null, $params = array ()) {
         /**
          * fetches historical mark price candlestick data containing the open, high, low, and close price of a market
          * @param {string} $symbol unified $symbol of the market to fetch OHLCV data for
@@ -7624,7 +7641,7 @@ class Exchange {
         }
     }
 
-    public function fetch_index_ohlcv(string $symbol, $timeframe = '1m', ?int $since = null, ?int $limit = null, $params = array ()) {
+    public function fetch_index_ohlcv(string $symbol, string $timeframe = '1m', ?int $since = null, ?int $limit = null, $params = array ()) {
         /**
          * fetches historical index price candlestick data containing the open, high, low, and close price of a market
          * @param {string} $symbol unified $symbol of the market to fetch OHLCV data for
@@ -7644,7 +7661,7 @@ class Exchange {
         }
     }
 
-    public function fetch_premium_index_ohlcv(string $symbol, $timeframe = '1m', ?int $since = null, ?int $limit = null, $params = array ()) {
+    public function fetch_premium_index_ohlcv(string $symbol, string $timeframe = '1m', ?int $since = null, ?int $limit = null, $params = array ()) {
         /**
          * fetches historical premium index price candlestick data containing the open, high, low, and close price of a market
          * @param {string} $symbol unified $symbol of the market to fetch OHLCV data for

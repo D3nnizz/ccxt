@@ -23,6 +23,7 @@ func NewBinanceus(userConfig map[string]interface{}) *Binanceus {
 
 // missing typed methods from base
 //nolint
+func (this *Binanceus) LoadMarkets(params ...interface{}) (map[string]MarketInterface, error) { return this.exchangeTyped.LoadMarkets(params...) }
 func (this *Binanceus) CancelAllOrders(options ...CancelAllOrdersOptions) ([]Order, error) {return this.exchangeTyped.CancelAllOrders(options...)}
 func (this *Binanceus) CancelAllOrdersAfter(timeout int64, options ...CancelAllOrdersAfterOptions) (map[string]interface{}, error) {return this.exchangeTyped.CancelAllOrdersAfter(timeout, options...)}
 func (this *Binanceus) CancelOrder(id string, options ...CancelOrderOptions) (Order, error) {return this.exchangeTyped.CancelOrder(id, options...)}

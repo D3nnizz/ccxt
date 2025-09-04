@@ -11,7 +11,7 @@ const { isNode, selfIsDefined, deepExtend, extend, clone, flatten, unique, index
 import { keys as keysFunc, values as valuesFunc, vwap as vwapFunc } from './functions.js';
 // import exceptions from "./errors.js"
 import { // eslint-disable-line object-curly-newline
-ExchangeError, BadSymbol, NullResponse, InvalidAddress, InvalidOrder, NotSupported, OperationFailed, BadResponse, AuthenticationError, DDoSProtection, RequestTimeout, NetworkError, InvalidProxySettings, ExchangeNotAvailable, ArgumentsRequired, RateLimitExceeded, BadRequest, UnsubscribeError } from "./errors.js";
+ExchangeError, BadSymbol, NullResponse, InvalidAddress, InvalidOrder, NotSupported, OperationFailed, BadResponse, AuthenticationError, DDoSProtection, RequestTimeout, NetworkError, InvalidProxySettings, ExchangeNotAvailable, ArgumentsRequired, RateLimitExceeded, BadRequest, UnsubscribeError, ExchangeClosedByUser } from "./errors.js";
 import { Precise } from './Precise.js';
 //-----------------------------------------------------------------------------
 import WsClient from './ws/WsClient.js';
@@ -1144,8 +1144,15 @@ export default class Exchange {
         }
     }
     async close() {
+        // test by running ts/src/pro/test/base/test.close.ts
+        await this.sleep(0); // allow other futures to run
         const clients = Object.values(this.clients || {});
         const closedClients = [];
+        for (let i = 0; i < clients.length; i++) {
+            const client = clients[i];
+            client.error = new ExchangeClosedByUser(this.id + ' closedByUser');
+            closedClients.push(client.close());
+        }
         for (let i = 0; i < clients.length; i++) {
             const client = clients[i];
             delete this.clients[client.url];
@@ -1177,6 +1184,7 @@ export default class Exchange {
             }
             client.reject(new ExchangeError(this.id + ' nonce is behind the cache after ' + maxRetries.toString() + ' tries.'), messageHash);
             delete this.clients[client.url];
+            this.orderbooks[symbol] = this.orderBook(); // clear the orderbook and its cache - issue https://github.com/ccxt/ccxt/issues/26753
         }
         catch (e) {
             client.reject(e, messageHash);
@@ -1825,6 +1833,13 @@ export default class Exchange {
         // return the first index of the cache that can be applied to the orderbook or -1 if not possible
         return -1;
     }
+    arraysConcat(arraysOfArrays) {
+        let result = [];
+        for (let i = 0; i < arraysOfArrays.length; i++) {
+            result = this.arrayConcat(result, arraysOfArrays[i]);
+        }
+        return result;
+    }
     findTimeframe(timeframe, timeframes = undefined) {
         if (timeframes === undefined) {
             timeframes = this.timeframes;
@@ -2180,6 +2195,9 @@ export default class Exchange {
     }
     async unWatchPositions(symbols = undefined, params = {}) {
         throw new NotSupported(this.id + ' unWatchPositions() is not supported yet');
+    }
+    async unWatchTicker(symbol, params = {}) {
+        throw new NotSupported(this.id + ' unWatchTicker() is not supported yet');
     }
     async fetchDepositAddresses(codes = undefined, params = {}) {
         throw new NotSupported(this.id + ' fetchDepositAddresses() is not supported yet');
@@ -4669,6 +4687,12 @@ export default class Exchange {
             return market;
         }
         return result;
+    }
+    marketOrNull(symbol) {
+        if (symbol === undefined) {
+            return undefined;
+        }
+        return this.market(symbol);
     }
     checkRequiredCredentials(error = true) {
         /**

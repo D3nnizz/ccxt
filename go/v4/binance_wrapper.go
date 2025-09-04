@@ -1252,6 +1252,7 @@ func (this *Binance) CancelAllOrders(options ...CancelAllOrdersOptions) ([]Order
  * @param {string[]} ids order ids
  * @param {string} [symbol] unified market symbol
  * @param {object} [params] extra parameters specific to the exchange API endpoint
+ * @param {string[]} [params.clientOrderIds] alternative to ids, array of client order ids
  *
  * EXCHANGE SPECIFIC PARAMETERS
  * @param {string[]} [params.origClientOrderIdList] max length 10 e.g. ["my_id_1","my_id_2"], encode the double quotes. No space after comma
@@ -3312,6 +3313,7 @@ func (this *Binance) FetchLongShortRatioHistory(options ...FetchLongShortRatioHi
 }
 // missing typed methods from base
 //nolint
+func (this *Binance) LoadMarkets(params ...interface{}) (map[string]MarketInterface, error) { return this.exchangeTyped.LoadMarkets(params...) }
 func (this *Binance) CancelAllOrdersAfter(timeout int64, options ...CancelAllOrdersAfterOptions) (map[string]interface{}, error) {return this.exchangeTyped.CancelAllOrdersAfter(timeout, options...)}
 func (this *Binance) CancelOrdersForSymbols(orders []CancellationRequest, options ...CancelOrdersForSymbolsOptions) ([]Order, error) {return this.exchangeTyped.CancelOrdersForSymbols(orders, options...)}
 func (this *Binance) CreateDepositAddress(code string, options ...CreateDepositAddressOptions) (DepositAddress, error) {return this.exchangeTyped.CreateDepositAddress(code, options...)}

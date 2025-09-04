@@ -23,6 +23,7 @@ func NewHuobi(userConfig map[string]interface{}) *Huobi {
 
 // missing typed methods from base
 //nolint
+func (this *Huobi) LoadMarkets(params ...interface{}) (map[string]MarketInterface, error) { return this.exchangeTyped.LoadMarkets(params...) }
 func (this *Huobi) CancelAllOrders(options ...CancelAllOrdersOptions) ([]Order, error) {return this.exchangeTyped.CancelAllOrders(options...)}
 func (this *Huobi) CancelAllOrdersAfter(timeout int64, options ...CancelAllOrdersAfterOptions) (map[string]interface{}, error) {return this.exchangeTyped.CancelAllOrdersAfter(timeout, options...)}
 func (this *Huobi) CancelOrder(id string, options ...CancelOrderOptions) (Order, error) {return this.exchangeTyped.CancelOrder(id, options...)}

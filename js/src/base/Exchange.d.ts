@@ -422,6 +422,7 @@ export default class Exchange {
     handleDelta(bookside: any, delta: any): void;
     handleDeltasWithKeys(bookSide: any, deltas: any, priceKey?: IndexType, amountKey?: IndexType, countOrIdKey?: IndexType): void;
     getCacheIndex(orderbook: any, deltas: any): number;
+    arraysConcat(arraysOfArrays: any[]): any[];
     findTimeframe(timeframe: any, timeframes?: any): string;
     checkProxyUrlSettings(url?: Str, method?: Str, headers?: any, body?: any): any;
     urlEncoderForProxyUrl(targetUrl: string): string;
@@ -460,6 +461,7 @@ export default class Exchange {
     watchOrderBookForSymbols(symbols: string[], limit?: Int, params?: {}): Promise<OrderBook>;
     unWatchOrderBookForSymbols(symbols: string[], params?: {}): Promise<any>;
     unWatchPositions(symbols?: Strings, params?: {}): Promise<any>;
+    unWatchTicker(symbol: string, params?: {}): Promise<any>;
     fetchDepositAddresses(codes?: Strings, params?: {}): Promise<DepositAddress[]>;
     fetchOrderBook(symbol: string, limit?: Int, params?: {}): Promise<OrderBook>;
     fetchOrderBookWs(symbol: string, limit?: Int, params?: {}): Promise<OrderBook>;
@@ -683,6 +685,7 @@ export default class Exchange {
     parseBidAsk(bidask: any, priceKey?: IndexType, amountKey?: IndexType, countOrIdKey?: IndexType): number[];
     safeCurrency(currencyId: Str, currency?: Currency): CurrencyInterface;
     safeMarket(marketId?: Str, market?: Market, delimiter?: Str, marketType?: Str): MarketInterface;
+    marketOrNull(symbol: string): MarketInterface;
     checkRequiredCredentials(error?: boolean): boolean;
     oath(): string;
     fetchBalance(params?: {}): Promise<Balances>;

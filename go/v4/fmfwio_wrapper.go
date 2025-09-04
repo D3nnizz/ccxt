@@ -23,6 +23,7 @@ func NewFmfwio(userConfig map[string]interface{}) *Fmfwio {
 
 // missing typed methods from base
 //nolint
+func (this *Fmfwio) LoadMarkets(params ...interface{}) (map[string]MarketInterface, error) { return this.exchangeTyped.LoadMarkets(params...) }
 func (this *Fmfwio) CancelAllOrders(options ...CancelAllOrdersOptions) ([]Order, error) {return this.exchangeTyped.CancelAllOrders(options...)}
 func (this *Fmfwio) CancelAllOrdersAfter(timeout int64, options ...CancelAllOrdersAfterOptions) (map[string]interface{}, error) {return this.exchangeTyped.CancelAllOrdersAfter(timeout, options...)}
 func (this *Fmfwio) CancelOrder(id string, options ...CancelOrderOptions) (Order, error) {return this.exchangeTyped.CancelOrder(id, options...)}
