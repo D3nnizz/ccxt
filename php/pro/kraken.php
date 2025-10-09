@@ -291,7 +291,7 @@ class kraken extends \ccxt\async\kraken {
             $market = $this->market($symbol);
             $url = $this->urls['api']['ws']['privateV2'];
             $requestId = $this->request_id();
-            $messageHash = $requestId;
+            $messageHash = $this->number_to_string($requestId);
             $request = array(
                 'method' => 'add_order',
                 'params' => array(
@@ -337,7 +337,7 @@ class kraken extends \ccxt\async\kraken {
         //
         $result = $this->safe_dict($message, 'result', array());
         $order = $this->parse_order($result);
-        $messageHash = $this->safe_value_2($message, 'reqid', 'req_id');
+        $messageHash = $this->safe_string_2($message, 'reqid', 'req_id');
         $client->resolve ($order, $messageHash);
     }
 
@@ -361,7 +361,7 @@ class kraken extends \ccxt\async\kraken {
             $token = Async\await($this->authenticate());
             $url = $this->urls['api']['ws']['privateV2'];
             $requestId = $this->request_id();
-            $messageHash = $requestId;
+            $messageHash = $this->number_to_string($requestId);
             $request = array(
                 'method' => 'amend_order',
                 'params' => array(
@@ -395,7 +395,7 @@ class kraken extends \ccxt\async\kraken {
             $token = Async\await($this->authenticate());
             $url = $this->urls['api']['ws']['privateV2'];
             $requestId = $this->request_id();
-            $messageHash = $requestId;
+            $messageHash = $this->number_to_string($requestId);
             $request = array(
                 'method' => 'cancel_order',
                 'params' => array(
@@ -427,7 +427,7 @@ class kraken extends \ccxt\async\kraken {
             $token = Async\await($this->authenticate());
             $url = $this->urls['api']['ws']['privateV2'];
             $requestId = $this->request_id();
-            $messageHash = $requestId;
+            $messageHash = $this->number_to_string($requestId);
             $request = array(
                 'method' => 'cancel_order',
                 'params' => array(
@@ -453,7 +453,7 @@ class kraken extends \ccxt\async\kraken {
         //         "time_out" => "2023-09-21T14:36:57.437952Z"
         //     }
         //
-        $reqId = $this->safe_value($message, 'req_id');
+        $reqId = $this->safe_string($message, 'req_id');
         $client->resolve ($message, $reqId);
     }
 
@@ -475,7 +475,7 @@ class kraken extends \ccxt\async\kraken {
             $token = Async\await($this->authenticate());
             $url = $this->urls['api']['ws']['privateV2'];
             $requestId = $this->request_id();
-            $messageHash = $requestId;
+            $messageHash = $this->number_to_string($requestId);
             $request = array(
                 'method' => 'cancel_all',
                 'params' => array(
@@ -500,7 +500,7 @@ class kraken extends \ccxt\async\kraken {
         //         "time_out" => "2023-09-21T14:36:57.437952Z"
         //     }
         //
-        $reqId = $this->safe_value($message, 'req_id');
+        $reqId = $this->safe_string($message, 'req_id');
         $client->resolve ($message, $reqId);
     }
 
